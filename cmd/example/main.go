@@ -28,6 +28,8 @@ func main() {
 	//           Output: {construct io.Writer according the command line parameters},
 	//       }
 	//       err := handler.Compute()
+		lab2.TestCalculatePrefix();
+		lab2.ExampleCalculatePrefix();
 
 	// res, _ := lab2.PrefixToPostfix("+ 2 2")
 	// fmt.Println(res)
