@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	lab2 "github.com/roman-mazur/architecture-lab-2"
+	lab2 "github.com/forestgreen18/continuous-integration-and-test-automation"
 )
 
 var (
@@ -14,6 +14,13 @@ var (
 func main() {
 	flag.Parse()
 
+	result, err := lab2.CalculatePrefix("+ 5 * - 4 2 3")
+	if err != nil {
+		fmt.Println("Error:", err)
+	} else {
+		fmt.Println("Result:", result)
+	}
+
 	// TODO: Change this to accept input from the command line arguments as described in the task and
 	//       output the results using the ComputeHandler instance.
 	//       handler := &lab2.ComputeHandler{
@@ -22,6 +29,6 @@ func main() {
 	//       }
 	//       err := handler.Compute()
 
-	res, _ := lab2.PrefixToPostfix("+ 2 2")
-	fmt.Println(res)
+	// res, _ := lab2.PrefixToPostfix("+ 2 2")
+	// fmt.Println(res)
 }
