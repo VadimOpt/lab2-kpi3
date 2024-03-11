@@ -3,34 +3,58 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"strings"
+	"io"
 	lab2 "github.com/forestgreen18/continuous-integration-and-test-automation"
 )
 
 var (
 	inputExpression = flag.String("e", "", "Expression to compute")
-	// TODO: Add other flags support for input and output configuration.
+	inputFile = flag.String("f", "", "File containing the expression")
+	outputFile = flag.String("o", "", "File to write the result")
 )
 
 func main() {
 	flag.Parse()
 
-	result, err := lab2.CalculatePrefix("+ 5 * - 4 2 3")
-	if err != nil {
-		fmt.Println("Error:", err)
+	var input io.Reader
+	if *inputExpression != "" {
+		input = strings.NewReader(*inputExpression)
+	} else if *inputFile != "" {
+		f, err := os.Open(*inputFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error opening file:", err)
+			os.Exit(1)
+		}
+		defer f.Close()
+		input = f
 	} else {
-		fmt.Println("Result:", result)
+		fmt.Fprintln(os.Stderr, "Please provide an expression or a file containing the expression.")
+		os.Exit(1)
 	}
 
-	// TODO: Change this to accept input from the command line arguments as described in the task and
-	//       output the results using the ComputeHandler instance.
-	//       handler := &lab2.ComputeHandler{
-	//           Input: {construct io.Reader according the command line parameters},
-	//           Output: {construct io.Writer according the command line parameters},
-	//       }
-	//       err := handler.Compute()
-		lab2.TestCalculatePrefix();
-		lab2.ExampleCalculatePrefix();
+	var output io.Writer
+	if *outputFile != "" {
+		f, err := os.Create(*outputFile)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "Error creating output file:", err)
+			os.Exit(1)
+		}
+		defer f.Close()
+		output = f
+	} else {
+		output = os.Stdout
+	}
 
-	// res, _ := lab2.PrefixToPostfix("+ 2 2")
-	// fmt.Println(res)
+	handler := &lab2.ComputeHandler{
+		Input:  input,
+		Output: output,
+	}
+
+	err := handler.Compute()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error computing result:", err)
+		os.Exit(1)
+	}
 }
